@@ -50,9 +50,10 @@ class Kiwoom(QMainWindow):
             now_trade_amount = int(self.kiwoom.GetCommData(sTrCode, sRQName, idx, "현재거래량").strip())
             rapid_amount = int(self.kiwoom.GetCommData(sTrCode, sRQName, idx, "급증량").strip())
             rapid_rate = self.kiwoom.GetCommData(sTrCode, sRQName, idx, "급증률").strip()
+            price_rate_percent = self.kiwoom.GetCommData(sTrCode, sRQName, idx, "등락률").strip()
             dic = {'종목코드':code, '종목명':code_name, '현재가':now_price,'전일대비':order_quantity,
                                     '이전거래량':before_trade_amount, '현재거래량':now_trade_amount,
-                                    '급증량':rapid_amount, '급증률':rapid_rate}
+                                    '급증량':rapid_amount, '급증률':rapid_rate, '등락률':price_rate_percent}
             self.latestData.append(dic)
         self.getRapidTradeRateEventLoop.exit()
 
