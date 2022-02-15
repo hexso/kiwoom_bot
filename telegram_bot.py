@@ -1,5 +1,5 @@
-import telegram
-from telegram.ext import Updater, CommandHandler
+import telegram as tel
+
 
 class TelegramBot:
 
@@ -7,29 +7,31 @@ class TelegramBot:
         self.core = None
         self.updater = None
         self.id = None
+        with open('private.txt', 'r') as f:
+            data = f.read()
+            data = data.split('\n')
+            for i in data:
+                if 'telegramtoken' in i:
+                    token = i[i.find(':') + 1:]
+                elif 'telegramchatid' in i:
+                    chatid = i[i.find(':') + 1:]
+        if token is None or chatid is None:
+            return False
+        self._set_chatid(chatid)
+        self._set_token(token)
+        self.bot = tel.Bot(token=self.token)
+        self.sendmsg('텔레그램 로그인 완료')
 
-    def SetChatId(self, chat_id):
+    def _set_chatid(self, chat_id):
         self.id = chat_id
 
-    def SetToken(self, token):
-        self.core = telegram.Bot(token)
-        self.updater = Updater(token)
+    def _set_token(self, token):
+        self.token = token
 
-    def SendMsg(self, text):
-        self.core.sendMessage(chat_id=self.id, text=text)
+    def sendmsg(self, text):
+        self.bot.sendMessage(chat_id=self.id, text=text)
 
 
 if __name__ == '__main__':
-    with open('private.txt', 'r') as f:
-        data = f.read()
-        data = data.split('\n')
-        for i in data:
-            if 'telegramtoken' in i:
-                token = i[i.find(':') + 1:]
-            elif 'telegramchatid' in i:
-                chatid = i[i.find(':') + 1:]
     tgBot = TelegramBot()
-    tgBot.SetChatId(chatid)
-    tgBot.SetToken(token)
-    tgBot.SendMsg('a')
-    #tlgBot.SendMsg('hello_world')
+    tgBot.sendmsg('테스트')
